@@ -4,11 +4,9 @@ import common.Person;
 import common.PersonService;
 import common.Task;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*
 Задача 1
@@ -22,11 +20,16 @@ public class Task1 implements Task {
     // !!! Редактируйте этот метод !!!
     private List<Person> findOrderedPersons(List<Integer> personIds) {
         Set<Person> persons = PersonService.findPersons(personIds);
-        return persons.stream()
-                .sorted(Comparator.comparing(person -> personIds.indexOf(person.getId())))
-                .collect(Collectors.toList());
+        Map<Integer, Person> orderedPersons = new LinkedHashMap<>();
+        for (int id : personIds) {
+            orderedPersons.put(id, null);
+        }
+        for (Person person : persons) {
+            orderedPersons.put(person.getId(), person);
+        }
+        return new ArrayList<>(orderedPersons.values());
     }
-//  Сложность метода O(n) (поиск по значению в массиве)
+//  Не выглядит элегантно, но O(n)
 
     @Override
     public boolean check() {
