@@ -32,10 +32,7 @@ public class Task8 implements Task {
 
     //ну и различные имена тоже хочется
     public Set<String> getDifferentNames(List<Person> persons) {
-        return new HashSet<>(persons).stream()
-                .map(Person::getFirstName)
-                .collect(Collectors.toSet());
-//        distinct() для сета не нужен
+        return new HashSet<>(getNames(persons));
     }
 
     //Для фронтов выдадим полное имя, а то сами не могут
@@ -57,7 +54,7 @@ public class Task8 implements Task {
     public boolean hasSamePersons(Collection<Person> persons1, Collection<Person> persons2) {
 
         return new ArrayList<>(persons1).stream()
-                .anyMatch(person -> person.equals(persons2.stream()));
+                .anyMatch(person -> persons2.contains(person));
     }
 
     //...

@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*
 Имеются
@@ -21,29 +22,13 @@ public class Task6 implements Task {
     private Set<String> getPersonDescriptions(Collection<Person> persons,
                                               Map<Integer, Set<Integer>> personAreaIds,
                                               Collection<Area> areas) {
-/*
-10 минут чтобы написать этот вариант и 3 дня, чтобы сделать это через stream
-        Set<String> result = new HashSet<>();
-        for (Person person : persons) {
-            Set<Integer> areaIds = personAreaIds.get(person.getId());
-            for (int id : areaIds) {
-                for (Area area : areas) {
-                    if (area.getId() == id) {
-                        result.add(person.getFirstName() + " - " + area.getName());
-                    }
-                }
-            }
-        }
-        return result;
-*/
 
-        return new HashSet<>(persons).stream()
-                .flatMap(person -> personAreaIds.get(person.getId()).stream()
-                        .flatMap(areaId -> areas.stream() //здесь по моей логике должен быть просто map, поскольку для каждого занчения areId мэппится одно значение string, но без flatmap не работает
-                                .filter(area -> area.getId().equals(areaId))
-                                .map(area -> person.getFirstName() + " - " + area.getName())))
+        Map<Integer, String> indexedAreas = areas.stream()
+                .collect(Collectors.toMap(Area::getId, Area::getName));
+        return persons.stream()
+                .flatMap(person-> personAreaIds.get(person.getId()).stream()
+                        .map(areaIds -> person.getFirstName() + " - " + indexedAreas.get(areaIds)))
                 .collect(Collectors.toSet());
-
     }
 
     @Override
