@@ -5,6 +5,7 @@ import common.PersonService;
 import common.Task;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,16 +21,14 @@ public class Task1 implements Task {
     // !!! Редактируйте этот метод !!!
     private List<Person> findOrderedPersons(List<Integer> personIds) {
         Set<Person> persons = PersonService.findPersons(personIds);
-        Map<Integer, Person> orderedPersons = new LinkedHashMap<>();
-        for (int id : personIds) {
-            orderedPersons.put(id, null);
-        }
-        for (Person person : persons) {
-            orderedPersons.put(person.getId(), person);
-        }
-        return new ArrayList<>(orderedPersons.values());
+        Map<Integer, Person> personsWithId = persons.stream()
+                .collect(Collectors.toMap(Person::getId, Function.identity()));
+
+        return personIds.stream()
+                .map(personsWithId::get)
+                .collect(Collectors.toList());
     }
-//  Не выглядит элегантно, но O(n)
+// O(n)
 
     @Override
     public boolean check() {

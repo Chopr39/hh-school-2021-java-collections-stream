@@ -23,7 +23,7 @@ public class Task8 implements Task {
     //Не хотим выдывать апи нашу фальшивую персону, поэтому конвертим начиная со второй
     public List<String> getNames(List<Person> persons) {
 
-        return new ArrayList<>(persons).stream()
+        return persons.stream()
                 .skip(1)
                 .map(Person::getFirstName)
                 .collect(Collectors.toList());
@@ -46,14 +46,14 @@ public class Task8 implements Task {
     // словарь id персоны -> ее имя
     public Map<Integer, String> getPersonNames(Collection<Person> persons) {
 
-        return new ArrayList<>(persons).stream()
-                .collect(Collectors.toMap(Person::getId, Task8::convertPersonToString));
+        return persons.stream()
+                .collect(Collectors.toMap(Person::getId, Task8::convertPersonToString, (person1,person2) -> person1));
     }
 
     // есть ли совпадающие в двух коллекциях персоны?
     public boolean hasSamePersons(Collection<Person> persons1, Collection<Person> persons2) {
 
-        return new ArrayList<>(persons1).stream()
+        return persons1.stream()
                 .anyMatch(person -> persons2.contains(person));
     }
 
